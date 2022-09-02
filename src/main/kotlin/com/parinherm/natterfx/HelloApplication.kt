@@ -9,13 +9,22 @@ import javafx.stage.Stage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.javafx.JavaFx as Main
+import kotlinx.coroutines.javafx.JavaFx
+import kotlin.coroutines.CoroutineContext
+
+object  UI : CoroutineScope {
+    override val coroutineContext: CoroutineContext = Dispatchers.JavaFx
+}
+
+object RecognizerScope: CoroutineScope {
+    override val coroutineContext: CoroutineContext = Dispatchers.IO//Dispatchers.Default
+}
 
 class HelloApplication : Application() {
     val recognizer = AudioRecognizer()
-    val recognizerScope = GlobalScope
-    lateinit var  job: Job
+    lateinit var job: Job
     val recognitionList: ObservableList<RecognitionResult> = emptyObservableList()
 
     override fun start(stage: Stage) {
@@ -26,22 +35,38 @@ class HelloApplication : Application() {
         stage.show()
 
         //job = recognizerScope.launch(newSingleThreadContext("recognizer-loop")) {
-        job = recognizerScope.launch(Dispatchers.IO) {
+        /************************************
+         * UI Style
+        job = UI.launch(Dispatchers.IO) {
             recognizer.run().cancellable().onEach { value: RecognitionResult ->
                 println("we got one: ${value.text} Length: ${value.audioLength} Timestamp: ${value.timeOf}")
                 //recognitionList.add(value)
             }.catch { e -> println("Caught $e")  }.collect {}
         }
+        */
 
+        /***********************************
+         * launchIn style
+         */
+        job = recognizer.run().cancellable().onEach { value: RecognitionResult ->
+            println("we got one: ${value.text} Length: ${value.audioLength} Timestamp: ${value.timeOf}")
+            //recognitionList.add(value)
+        }.catch { e ->
+            println("Caught $e")
+        }
+            .launchIn(RecognizerScope)
+        /************************************/
     }
 
     override fun stop() {
         super.stop()
         runBlocking {
-            job.cancelAndJoin()
+            shutDown(this)
         }
-        //GlobalScope.launch(Dispatchers.Main) { job.cancelAndJoin() }
-        //recognizerScope.cancel()
+    }
+
+    suspend fun shutDown(scope: CoroutineScope){
+        job.cancelAndJoin()
     }
 }
 
