@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+group 'com.parinherm'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.7.1'
+}
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+application {
+    mainModule = 'com.parinherm.natterfx'
+    mainClass = 'com.parinherm.natterfx.HelloApplication'
+}
+
+[compileKotlin, compileTestKotlin].forEach {
+    it.kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+javafx {
+    version = '17.0.0.1'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+dependencies {
+    implementation('org.controlsfx:controlsfx:11.1.0')
+    implementation('org.kordamp.ikonli:ikonli-javafx:12.2.0')
+    implementation ('com.alphacephei:vosk:0.3.38')
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")
+    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.6.4')
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+}
+
+test {
+    useJUnitPlatform()
+}
