@@ -1,8 +1,9 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.21'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 group 'com.parinherm'
@@ -30,7 +31,7 @@ application {
 
 [compileKotlin, compileTestKotlin].forEach {
     it.kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
 }
 
@@ -46,6 +47,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")
     implementation('org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.6.4')
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.4.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

@@ -8,6 +8,7 @@ module com.parinherm.natterfx {
     requires vosk;
     requires kotlinx.coroutines.core.jvm;
     requires java.desktop;
+    requires kotlinx.serialization.json;
     requires kotlin.stdlib.jdk7;
 
     opens com.parinherm.natterfx to javafx.fxml;

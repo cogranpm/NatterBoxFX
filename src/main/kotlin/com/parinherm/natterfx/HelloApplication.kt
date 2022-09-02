@@ -22,7 +22,8 @@ class HelloApplication : Application() {
         stage.scene = scene
         stage.show()
 
-        job = recognizerScope.launch(newSingleThreadContext("recognizer-loop")) {
+        //job = recognizerScope.launch(newSingleThreadContext("recognizer-loop")) {
+        job = recognizerScope.launch(Dispatchers.IO) {
             recognizer.run().cancellable().onEach { value: String ->
                 println("we got one: $value")
             }.catch { e -> println("Caught $e")  }.collect {}

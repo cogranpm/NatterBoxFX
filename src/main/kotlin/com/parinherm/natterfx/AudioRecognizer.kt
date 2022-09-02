@@ -1,9 +1,9 @@
 package com.parinherm.natterfx
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.NonCancellable.isActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.vosk.LibVosk
 import org.vosk.LogLevel
 import org.vosk.Model
@@ -23,6 +23,8 @@ class AudioRecognizer {
     val info = DataLine.Info(TargetDataLine::class.java, format)
     val dataLineInfo: DataLine.Info = DataLine.Info(SourceDataLine::class.java, format)
     val modelPath: String
+    val jsonFormat = Json { isLenient = true }
+
     init {
         LibVosk.setLogLevel(LogLevel.DEBUG)
         speakers = AudioSystem.getLine(dataLineInfo) as SourceDataLine
@@ -37,7 +39,7 @@ class AudioRecognizer {
                     microphone.open(format)
                     microphone.start()
 
-                    if(SPEAKERS_ON){
+                    if (SPEAKERS_ON) {
                         speakers.open(format)
                         speakers.start()
                     }
@@ -51,14 +53,15 @@ class AudioRecognizer {
                         numBytesRead = microphone.read(b, 0, CHUNK_SIZE)
                         out.write(b, 0, numBytesRead)
 
-                        if(SPEAKERS_ON){
+                        if (SPEAKERS_ON) {
                             //this plays back what is read, useful for caching the audio for writing to file
                             speakers.write(b, 0, numBytesRead)
                         }
 
                         if (recognizer.acceptWaveForm(b, numBytesRead)) {
-                            //System.out.println(recognizer.result)
-                            emit(recognizer.result)
+                            val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
+                            emit(data.text)
+                            //emit(recognizer.result)
                         } else {
                             //System.out.println(recognizer.partialResult)
                         }
@@ -72,9 +75,9 @@ class AudioRecognizer {
         }
     }
 
-    private fun cleanup(){
+    private fun cleanup() {
         println("cleaning up")
-        if(SPEAKERS_ON){
+        if (SPEAKERS_ON) {
             speakers.drain()
             speakers.close()
         }
