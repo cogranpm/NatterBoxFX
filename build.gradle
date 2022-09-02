@@ -55,3 +55,14 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+
+distributions {
+    main {
+        distributionBaseName = 'NatterFX'
+        contents {
+            from 'src/readme.md'
+            from 'model'
+        }
+    }
+}

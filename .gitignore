@@ -1,5 +1,5 @@
 build
-model-small
+model
 gradlew
 gradlew.bat
 .gradle
