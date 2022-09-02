@@ -8,9 +8,7 @@ import org.vosk.LibVosk
 import org.vosk.LogLevel
 import org.vosk.Model
 import org.vosk.Recognizer
-import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
-import java.io.FileInputStream
 import java.nio.file.Paths
 import javax.sound.sampled.*
 
@@ -32,7 +30,7 @@ class AudioRecognizer {
         modelPath = "${Paths.get("").toAbsolutePath().normalize().toString()}\\model"
     }
 
-    fun run(): Flow<String> = flow {
+    fun run(): Flow<RecognitionResult> = flow {
         try {
             Model(modelPath).use { model ->
                 Recognizer(model, 120000f).use { recognizer ->
@@ -60,7 +58,8 @@ class AudioRecognizer {
 
                         if (recognizer.acceptWaveForm(b, numBytesRead)) {
                             val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
-                            emit(data.text)
+                            val result = RecognitionResult(data, b, numBytesRead)
+                            emit(result)
                             //emit(recognizer.result)
                         } else {
                             //System.out.println(recognizer.partialResult)

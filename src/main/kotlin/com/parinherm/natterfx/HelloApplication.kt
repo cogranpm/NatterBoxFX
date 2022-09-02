@@ -1,6 +1,8 @@
 package com.parinherm.natterfx
 
 import javafx.application.Application
+import javafx.collections.FXCollections.emptyObservableList
+import javafx.collections.ObservableList
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
@@ -14,6 +16,7 @@ class HelloApplication : Application() {
     val recognizer = AudioRecognizer()
     val recognizerScope = GlobalScope
     lateinit var  job: Job
+    val recognitionList: ObservableList<RecognitionResult> = emptyObservableList()
 
     override fun start(stage: Stage) {
         val fxmlLoader = FXMLLoader(HelloApplication::class.java.getResource("hello-view.fxml"))
@@ -24,8 +27,9 @@ class HelloApplication : Application() {
 
         //job = recognizerScope.launch(newSingleThreadContext("recognizer-loop")) {
         job = recognizerScope.launch(Dispatchers.IO) {
-            recognizer.run().cancellable().onEach { value: String ->
-                println("we got one: $value")
+            recognizer.run().cancellable().onEach { value: RecognitionResult ->
+                println("we got one: ${value.text} Length: ${value.audioLength} Timestamp: ${value.timeOf}")
+                //recognitionList.add(value)
             }.catch { e -> println("Caught $e")  }.collect {}
         }
 
