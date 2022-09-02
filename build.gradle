@@ -62,7 +62,9 @@ distributions {
         distributionBaseName = 'NatterFX'
         contents {
             from 'src/readme.md'
-            from 'model'
+            into('model') {
+                from 'model'
+            }
         }
     }
 }
