@@ -1,5 +1,6 @@
 package com.parinherm.natterfx
 
+import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
@@ -33,6 +34,7 @@ class HelloController {
             if(it.next()){
                 if(it.wasAdded()){
                    // welcomeText.text = "added one"
+                    //Platform.runLater { welcomeText.text = "added one" }
                 }
             }
         })
@@ -58,9 +60,10 @@ class HelloController {
     }
 
     suspend fun addItem(item: RecognitionResult) {
-        println("we got one: ${item.text.text} Length: ${item.audioLength} Timestamp: ${item.timeOf}")
+        //println("we got one: ${item.text.text} Length: ${item.audioLength} Timestamp: ${item.timeOf}")
         recognitionList.add(item)
-        //welcomeText.text = item.text.text
+        Platform.runLater { welcomeText.text = item.text.text}
+        //welcomeText.text =
     }
 
     fun shutdown() {
