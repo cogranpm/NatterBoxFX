@@ -9,6 +9,7 @@ import org.vosk.LogLevel
 import org.vosk.Model
 import org.vosk.Recognizer
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.nio.file.Paths
 import javax.sound.sampled.*
 
@@ -29,7 +30,7 @@ class AudioRecognizer {
         microphone = AudioSystem.getLine(info) as TargetDataLine
         val currentPath = Paths.get("").toAbsolutePath().normalize()
         val parentPath = currentPath.parent
-        modelPath = "${parentPath.toString()}\\model"
+        modelPath = "${parentPath.toString()}${File.separator}model"
     }
 
     fun run(): Flow<RecognitionResult> = flow {
