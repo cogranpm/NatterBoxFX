@@ -65,7 +65,7 @@ distributions {
         contents {
             from 'src/readme.md'
             into('model') {
-                from 'model'
+                from '../model'
             }
         }
     }

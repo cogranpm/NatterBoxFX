@@ -15,7 +15,7 @@
     <Label fx:id="welcomeText"/>
     <Button onAction="#onHelloButtonClick">
         <graphic>
-            <FontIcon iconLiteral="mdi2a-alarm-check" iconSize="64"/>
+            <FontIcon iconLiteral="mdi2a-apple-finder" iconSize="64"/>
         </graphic>
     </Button>
 </VBox>

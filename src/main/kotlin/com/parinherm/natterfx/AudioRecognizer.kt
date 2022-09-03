@@ -27,7 +27,9 @@ class AudioRecognizer {
         LibVosk.setLogLevel(LogLevel.DEBUG)
         speakers = AudioSystem.getLine(dataLineInfo) as SourceDataLine
         microphone = AudioSystem.getLine(info) as TargetDataLine
-        modelPath = "${Paths.get("").toAbsolutePath().normalize().toString()}\\model"
+        val currentPath = Paths.get("").toAbsolutePath().normalize()
+        val parentPath = currentPath.parent
+        modelPath = "${parentPath.toString()}\\model"
     }
 
     fun run(): Flow<RecognitionResult> = flow {
