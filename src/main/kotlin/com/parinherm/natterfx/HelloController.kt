@@ -62,7 +62,7 @@ class HelloController {
     suspend fun addItem(item: RecognitionResult) {
         //println("we got one: ${item.text.text} Length: ${item.audioLength} Timestamp: ${item.timeOf}")
         recognitionList.add(item)
-        Platform.runLater { welcomeText.text = item.text.text}
+        Platform.runLater { welcomeText.text = item.text}
         //welcomeText.text =
     }
 

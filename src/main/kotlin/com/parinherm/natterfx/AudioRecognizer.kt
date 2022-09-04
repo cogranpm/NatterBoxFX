@@ -61,7 +61,7 @@ class AudioRecognizer {
 
                         if (recognizer.acceptWaveForm(b, numBytesRead)) {
                             val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
-                            val result = RecognitionResult(data, b, numBytesRead)
+                            val result = RecognitionResult(data.text, b, numBytesRead)
                             emit(result)
                             //emit(recognizer.result)
                         } else {

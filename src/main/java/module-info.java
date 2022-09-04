@@ -14,6 +14,7 @@ module com.parinherm.natterfx {
     requires kotlinx.serialization.json;
     requires kotlin.stdlib.jdk7;
     requires kotlinx.coroutines.javafx;
+    requires exposed.core;
 
     opens com.parinherm.natterfx to javafx.fxml;
     exports com.parinherm.natterfx;

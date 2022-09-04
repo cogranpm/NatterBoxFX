@@ -2,8 +2,8 @@ package com.parinherm.natterfx
 
 import java.time.Instant
 
-data class RecognitionResult(
-    val text: RecognizerText,
+class RecognitionResult(
+    val text: String,
     val audioData: ByteArray,
     val audioLength: Int,
     val timeOf: Instant = Instant.now()
