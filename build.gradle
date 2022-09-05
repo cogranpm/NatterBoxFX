@@ -57,6 +57,7 @@ dependencies {
     implementation("com.h2database:h2:2.1.214")
     implementation("org.slf4j:slf4j-nop:2.0.0")
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.7'
+    implementation 'ch.vorburger.mariaDB4j:mariaDB4j:2.5.3'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

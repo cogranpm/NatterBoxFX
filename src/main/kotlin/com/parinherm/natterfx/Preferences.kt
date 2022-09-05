@@ -10,7 +10,7 @@ const val NETWORK_SERVER = "networkServer"
 
 object Preferences {
     var databaseHost: String
-    var databasePort: String
+    var databasePort: Int
     var databaseUser: String
     var databasePassword: String
     var networkServer: Boolean
@@ -19,15 +19,15 @@ object Preferences {
 
     init {
         databaseHost = "localhost"
-        databasePort = "3306"
-        databaseUser = "user"
-        databasePassword = "password"
+        databasePort = 3306
+        databaseUser = "root"
+        databasePassword = ""
         networkServer = true
     }
 
     fun load() {
         databaseHost = prefs.get(DATABASE_HOST, databaseHost)
-        databasePort = prefs.get(DATABASE_PORT, databasePort)
+        databasePort = prefs.getInt(DATABASE_PORT, databasePort)
         databaseUser = prefs.get(DATABASE_USER, databaseUser)
         databasePassword = prefs.get(DATABASE_PASSWORD, databasePassword)
         networkServer = prefs.getBoolean(NETWORK_SERVER, networkServer)
@@ -35,7 +35,7 @@ object Preferences {
 
     fun save() {
         prefs.put(DATABASE_HOST, databaseHost)
-        prefs.put(DATABASE_PORT, databasePort)
+        prefs.putInt(DATABASE_PORT, databasePort)
         prefs.put(DATABASE_USER, databaseUser)
         prefs.put(DATABASE_PASSWORD, databasePassword)
         prefs.putBoolean(NETWORK_SERVER, networkServer)
