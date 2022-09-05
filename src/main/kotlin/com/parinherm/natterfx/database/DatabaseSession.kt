@@ -15,4 +15,5 @@ object DatabaseSession {
                 Database.connect("jdbc:h2:${EmbeddedDatabase.dataPath}", "org.h2.Driver")
             }
         }
+
 }

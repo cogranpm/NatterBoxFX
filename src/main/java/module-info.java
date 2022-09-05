@@ -16,6 +16,7 @@ module com.parinherm.natterfx {
     requires kotlinx.coroutines.javafx;
     requires exposed.core;
     requires java.prefs;
+    requires exposed.dao;
 
     opens com.parinherm.natterfx to javafx.fxml;
     exports com.parinherm.natterfx;

@@ -1,4 +1,4 @@
-package com.parinherm.natterfx
+package com.parinherm.natterfx.database
 
 import org.jetbrains.exposed.dao.id.UUIDTable
 
