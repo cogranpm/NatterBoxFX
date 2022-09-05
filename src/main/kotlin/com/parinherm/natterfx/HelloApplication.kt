@@ -8,6 +8,11 @@ import javafx.stage.Stage
 
 class HelloApplication() : Application() {
     override fun start(stage: Stage) {
+        Preferences.databaseHost = "media-server"
+        Preferences.databasePassword = "reddingo"
+        Preferences.databaseUser = "paulm"
+        Preferences.databasePort = "3306"
+        Preferences.networkServer = true
         val fxmlLoader = FXMLLoader(HelloApplication::class.java.getResource("hello-view.fxml"))
         val scene = Scene(fxmlLoader.load(), 320.0, 240.0)
         val controller = fxmlLoader.getController<HelloController>()
