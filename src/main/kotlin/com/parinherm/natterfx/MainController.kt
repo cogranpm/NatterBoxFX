@@ -1,7 +1,6 @@
 package com.parinherm.natterfx
 
 import com.parinherm.natterfx.database.DatabaseSession
-import javafx.application.Application.launch
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
@@ -25,7 +24,7 @@ object RecognizerScope : CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.IO//Dispatchers.Default
 }
 
-class HelloController {
+class MainController {
     val recognitionList: ObservableList<RecognitionResult>
     var job: Job
     val recognizer = AudioRecognizer()

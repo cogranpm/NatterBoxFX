@@ -26,7 +26,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.parinherm.natterfx'
-    mainClass = 'com.parinherm.natterfx.HelloApplication'
+    mainClass = 'com.parinherm.natterfx.MainApplication'
 }
 
 [compileKotlin, compileTestKotlin].forEach {

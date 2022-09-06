@@ -7,7 +7,7 @@ import javafx.scene.Scene
 import javafx.stage.Stage
 
 
-class HelloApplication() : Application() {
+class MainApplication() : Application() {
     override fun start(stage: Stage) {
         Preferences.databaseHost = "media-server"
         Preferences.databasePassword = ""
@@ -17,10 +17,10 @@ class HelloApplication() : Application() {
         if(!Preferences.networkServer){
             EmbeddedDatabase.start()
         }
-        val fxmlLoader = FXMLLoader(HelloApplication::class.java.getResource("hello-view.fxml"))
+        val fxmlLoader = FXMLLoader(MainApplication::class.java.getResource("main-view.fxml"))
         val scene = Scene(fxmlLoader.load(), 320.0, 240.0)
-        val controller = fxmlLoader.getController<HelloController>()
-        stage.title = "Hello!"
+        val controller = fxmlLoader.getController<MainController>()
+        stage.title = "Natter"
         stage.scene = scene
         stage.setOnHidden { controller.shutdown() }
         stage.show()
@@ -35,5 +35,5 @@ class HelloApplication() : Application() {
 }
 
 fun main() {
-   Application.launch(HelloApplication::class.java )
+   Application.launch(MainApplication::class.java )
 }
