@@ -7,6 +7,7 @@ import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.fxml.FXML
 import javafx.scene.control.Label
+import javafx.scene.control.ListView
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.catch
@@ -25,15 +26,15 @@ object RecognizerScope : CoroutineScope {
 }
 
 class MainController {
-    val recognitionList: ObservableList<RecognitionResult>
+    //val recognitionList: ObservableList<RecognitionResult>
+    val recognitionList: ObservableList<String>
     var job: Job
     val recognizer = AudioRecognizer()
 
     init {
         recognitionList = FXCollections.observableArrayList()
         DatabaseSession.open()
-
-        recognitionList.addListener(ListChangeListener<RecognitionResult>() {
+        recognitionList.addListener(ListChangeListener<String>() {
             if(it.next()){
                 if(it.wasAdded()){
                    // welcomeText.text = "added one"
@@ -68,8 +69,11 @@ class MainController {
 
     suspend fun addItem(item: RecognitionResult) {
         //println("we got one: ${item.text.text} Length: ${item.audioLength} Timestamp: ${item.timeOf}")
-        recognitionList.add(item)
-        Platform.runLater { welcomeText.text = item.text}
+
+        Platform.runLater {
+            welcomeText.text = item.text
+            recognitionList.add(item.text)
+        }
         //welcomeText.text =
     }
 
@@ -88,9 +92,16 @@ class MainController {
          */
     }
 
+    @FXML
+    private fun initialize(){
+        lstView.items = recognitionList
+    }
 
     @FXML
     private lateinit var welcomeText: Label
+
+    @FXML
+    private lateinit var lstView: ListView<String>
 
     @FXML
     private fun onHelloButtonClick() {

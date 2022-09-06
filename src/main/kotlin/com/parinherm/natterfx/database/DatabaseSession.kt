@@ -27,7 +27,7 @@ object DatabaseSession {
         transaction {
             addLogger(StdOutSqlLogger)
             SchemaUtils.create(QuizEntities)
-            QuizRepository.test()
+            //QuizRepository.test()
         }
     }
 
