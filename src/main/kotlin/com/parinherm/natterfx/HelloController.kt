@@ -1,5 +1,6 @@
 package com.parinherm.natterfx
 
+import com.parinherm.natterfx.database.DatabaseSession
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
@@ -30,6 +31,8 @@ class HelloController {
 
     init {
         recognitionList = FXCollections.observableArrayList()
+        DatabaseSession.open()
+
         recognitionList.addListener(ListChangeListener<RecognitionResult>() {
             if(it.next()){
                 if(it.wasAdded()){
@@ -38,7 +41,11 @@ class HelloController {
                 }
             }
         })
+
         job = recognizer.run().cancellable().onEach { value: RecognitionResult ->
+            /********************
+             * every speech uttered comes here
+             */
             //recognitionList.add(value)
             addItem(value)
         }.catch { e ->

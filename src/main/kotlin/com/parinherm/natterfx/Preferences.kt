@@ -20,9 +20,9 @@ object Preferences {
     init {
         databaseHost = "localhost"
         databasePort = 3306
-        databaseUser = "root"
+        databaseUser = "sa"
         databasePassword = ""
-        networkServer = true
+        networkServer = false
     }
 
     fun load() {

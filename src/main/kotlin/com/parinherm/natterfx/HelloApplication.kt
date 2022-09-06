@@ -9,9 +9,9 @@ import javafx.stage.Stage
 
 class HelloApplication() : Application() {
     override fun start(stage: Stage) {
-        Preferences.databaseHost = "localhost"
+        Preferences.databaseHost = "media-server"
         Preferences.databasePassword = ""
-        Preferences.databaseUser = "root"
+        Preferences.databaseUser = "sa"
         Preferences.databasePort = 3306
         Preferences.networkServer = false
         if(!Preferences.networkServer){

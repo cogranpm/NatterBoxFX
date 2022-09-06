@@ -17,6 +17,12 @@ module com.parinherm.natterfx {
     requires exposed.core;
     requires java.prefs;
     requires exposed.dao;
+    requires com.h2database;
+    requires kotlin.reflect;
+    requires org.mariadb.jdbc;
+    requires org.slf4j;
+
+    //opens com.parinherm.natterfx.database to kotlin.reflect;
 
     opens com.parinherm.natterfx to javafx.fxml;
     exports com.parinherm.natterfx;
