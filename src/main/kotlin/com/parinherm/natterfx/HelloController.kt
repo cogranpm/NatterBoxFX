@@ -1,6 +1,7 @@
 package com.parinherm.natterfx
 
 import com.parinherm.natterfx.database.DatabaseSession
+import javafx.application.Application.launch
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
@@ -74,14 +75,26 @@ class HelloController {
     }
 
     fun shutdown() {
-        runBlocking { job.cancelAndJoin() }
+
+        UI.launch {
+           job.cancelAndJoin()
+        }
+        //RecognizerScope.coroutineContext.job.cancelAndJoin()
+        //Dispatchers.shutdown()
+
+        /*
+        runBlocking{
+            job.cancelAndJoin()
+        }
+         */
     }
+
 
     @FXML
     private lateinit var welcomeText: Label
 
     @FXML
     private fun onHelloButtonClick() {
-        welcomeText.text = "Welcome to JavaFX Application!"
+        welcomeText.text = "Natter"
     }
 }

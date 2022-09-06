@@ -22,8 +22,7 @@ module com.parinherm.natterfx {
     requires org.mariadb.jdbc;
     requires org.slf4j;
 
-    //opens com.parinherm.natterfx.database to kotlin.reflect;
-
     opens com.parinherm.natterfx to javafx.fxml;
     exports com.parinherm.natterfx;
+    exports com.parinherm.natterfx.database;
 }
