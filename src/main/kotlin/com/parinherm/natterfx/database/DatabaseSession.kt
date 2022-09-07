@@ -16,6 +16,7 @@ object DatabaseSession {
                 password=Preferences.databasePassword
             )
         } else {
+            println(EmbeddedDatabase.dataPath)
                 Database.connect("jdbc:h2:${EmbeddedDatabase.dataPath}", "org.h2.Driver", user = Preferences.databaseUser, password = Preferences.databasePassword)
             }
         }
@@ -26,8 +27,7 @@ object DatabaseSession {
         }
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create(QuizEntities)
-            QuizRepository.test()
+            SchemaUtils.createMissingTablesAndColumns(QuizEntities, RecognitionEntities)
         }
     }
 

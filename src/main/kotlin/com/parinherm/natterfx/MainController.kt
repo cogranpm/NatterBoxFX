@@ -36,7 +36,12 @@ class MainController {
         DatabaseSession.open()
 
         job = recognizer.run().cancellable().onEach { value: RecognitionResult ->
-            addItem(value)
+            try {
+                QuizCommands.processInput(value)
+                addItem(value)
+            } catch (e: Exception) {
+                println(e.message)
+            }
         }.catch { e ->
             println("Caught $e")
         }

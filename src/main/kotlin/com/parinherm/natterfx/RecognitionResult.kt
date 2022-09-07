@@ -7,4 +7,8 @@ class RecognitionResult(
     val audioData: ByteArray,
     val audioLength: Int,
     val timeOf: Instant = Instant.now()
-)
+) {
+    fun getCleanedText(): String{
+        return text.trimStart().trimEnd()
+    }
+}
