@@ -14,7 +14,8 @@ import java.util.*
 
 object RecognitionEntities : UUIDTable(){
     val text = text("text")
-    val audio: Column<ByteArray> =  binary("audio", Int.MAX_VALUE)
+    //val audio: Column<ByteArray> =  binary("audio", Int.MAX_VALUE)
+    val audio =  blob("audio")
     val length = integer("length")
     val ts = datetime("ts").defaultExpression(CurrentDateTime)
     val quizId = reference("quiz_id", QuizEntities)

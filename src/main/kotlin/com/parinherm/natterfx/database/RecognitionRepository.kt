@@ -1,6 +1,7 @@
 package com.parinherm.natterfx.database
 
 import com.parinherm.natterfx.RecognitionResult
+import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object RecognitionRepository {
@@ -9,7 +10,7 @@ object RecognitionRepository {
         transaction {
             val recognitionEntity = RecognitionEntity.new {
                 text = recognitionResult.text
-                audio = recognitionResult.audioData
+                audio = ExposedBlob(recognitionResult.audioData)
                 length = recognitionResult.audioLength
                 quiz = quizEntity_
             }

@@ -31,6 +31,7 @@ class MainController {
     val recognitionList: ObservableList<String>
     var job: Job
     val recognizer = AudioRecognizer()
+    val allAudio: ArrayList<RecognitionResult> = arrayListOf<RecognitionResult>()
 
     init {
         recognitionList = FXCollections.observableArrayList()
@@ -40,6 +41,8 @@ class MainController {
             try {
                 QuizCommands.processInput(value)
                 addItem(value)
+                allAudio.add(value)
+                //AudioPlayer.play(value.audioData, value.audioLength)
             } catch (e: Exception) {
                 println(e.message)
             }
@@ -77,15 +80,24 @@ class MainController {
     @FXML
     private fun onHelloButtonClick() {
         welcomeText.text = "Playing Audio"
-        if(recognitionList.isNotEmpty()){
+
+            allAudio.forEach{
+                println("Playing: ${it.text} ${it.audioLength}")
+                AudioPlayer.play(it.audioData, it.audioLength)
+            }
+
+
+        /*
+       if(recognitionList.isNotEmpty()){
             val lastAdded = RecognitionRepository.getMostRecent()
             if(lastAdded != null){
                 println(lastAdded.text)
                 println(lastAdded.length)
                 println(lastAdded.ts)
-                AudioPlayer.play(lastAdded.audio, lastAdded.length)
+                AudioPlayer.play(lastAdded.audio.bytes, lastAdded.length)
             }
         }
+         */
     }
 }
 
