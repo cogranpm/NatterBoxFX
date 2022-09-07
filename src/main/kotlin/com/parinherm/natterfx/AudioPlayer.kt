@@ -16,7 +16,12 @@ object AudioPlayer {
     }
 
     fun play(audio: ByteArray, length: Int){
-        speakers.write(audio, 0, length)
+        try {
+            println("playing")
+            speakers.write(audio, 0, length)
+        } catch (e: Exception){
+           println(e.message)
+        }
     }
 
     fun close(){

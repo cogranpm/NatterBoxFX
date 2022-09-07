@@ -80,6 +80,9 @@ class MainController {
         if(recognitionList.isNotEmpty()){
             val lastAdded = RecognitionRepository.getMostRecent()
             if(lastAdded != null){
+                println(lastAdded.text)
+                println(lastAdded.length)
+                println(lastAdded.ts)
                 AudioPlayer.play(lastAdded.audio, lastAdded.length)
             }
         }

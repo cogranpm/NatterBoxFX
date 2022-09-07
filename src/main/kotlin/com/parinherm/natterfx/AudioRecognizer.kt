@@ -17,32 +17,29 @@ class AudioRecognizer {
 
     val SPEAKERS_ON = false
     var microphone: TargetDataLine
-    var speakers: SourceDataLine
     val format = AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 60000f, 16, 2, 4, 44100f, false)
     val info = DataLine.Info(TargetDataLine::class.java, format)
-    val dataLineInfo: DataLine.Info = DataLine.Info(SourceDataLine::class.java, format)
     val modelPath: String
     val jsonFormat = Json { isLenient = true }
 
     init {
         LibVosk.setLogLevel(LogLevel.DEBUG)
-        speakers = AudioSystem.getLine(dataLineInfo) as SourceDataLine
         microphone = AudioSystem.getLine(info) as TargetDataLine
         val currentPath = Paths.get("").toAbsolutePath().normalize()
         val parentPath = currentPath.parent
         modelPath = "${parentPath.toString()}${File.separator}model"
+        microphone.open(format)
+        microphone.start()
     }
 
     fun run(): Flow<RecognitionResult> = flow {
         try {
             Model(modelPath).use { model ->
                 Recognizer(model, 120000f).use { recognizer ->
-                    microphone.open(format)
-                    microphone.start()
 
                     if (SPEAKERS_ON) {
-                        speakers.open(format)
-                        speakers.start()
+                        //speakers.open(format)
+                        //speakers.start()
                     }
 
                     val out = ByteArrayOutputStream()
@@ -55,8 +52,7 @@ class AudioRecognizer {
                         out.write(b, 0, numBytesRead)
 
                         if (SPEAKERS_ON) {
-                            //this plays back what is read, useful for caching the audio for writing to file
-                            speakers.write(b, 0, numBytesRead)
+                            AudioPlayer.play(b, numBytesRead)
                         }
 
                         if (recognizer.acceptWaveForm(b, numBytesRead)) {
@@ -79,11 +75,7 @@ class AudioRecognizer {
 
     private fun cleanup() {
         println("cleaning up")
-        if (SPEAKERS_ON) {
-            speakers.drain()
-            speakers.close()
-        }
-        microphone.close()
+       microphone.close()
     }
 
     /*
