@@ -1,6 +1,7 @@
 package com.parinherm.natterfx
 
 import com.parinherm.natterfx.database.DatabaseSession
+import com.parinherm.natterfx.database.RecognitionRepository
 import javafx.application.Platform
 import javafx.collections.FXCollections
 //import javafx.collections.ListChangeListener
@@ -75,7 +76,13 @@ class MainController {
 
     @FXML
     private fun onHelloButtonClick() {
-        welcomeText.text = "Natter"
+        welcomeText.text = "Playing Audio"
+        if(recognitionList.isNotEmpty()){
+            val lastAdded = RecognitionRepository.getMostRecent()
+            if(lastAdded != null){
+                AudioPlayer.play(lastAdded.audio, lastAdded.length)
+            }
+        }
     }
 }
 

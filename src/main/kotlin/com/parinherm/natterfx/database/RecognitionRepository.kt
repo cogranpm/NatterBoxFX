@@ -15,4 +15,12 @@ object RecognitionRepository {
             }
         }
     }
+
+    fun getMostRecent(): RecognitionEntity? {
+        return transaction {
+            val results = RecognitionEntity.all().limit(1).sortedByDescending { it.ts }
+            println(results.size)
+            return@transaction results.firstOrNull()
+        }
+    }
 }

@@ -17,6 +17,7 @@ class MainApplication() : Application() {
         if(!Preferences.networkServer){
             EmbeddedDatabase.start()
         }
+        AudioPlayer.open()
         val fxmlLoader = FXMLLoader(MainApplication::class.java.getResource("main-view.fxml"))
         val scene = Scene(fxmlLoader.load(), 320.0, 240.0)
         val controller = fxmlLoader.getController<MainController>()
@@ -31,6 +32,7 @@ class MainApplication() : Application() {
         if(!Preferences.networkServer){
             EmbeddedDatabase.stop()
         }
+        AudioPlayer.close()
     }
 }
 
