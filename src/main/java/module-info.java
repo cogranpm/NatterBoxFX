@@ -21,6 +21,7 @@ module com.parinherm.natterfx {
     requires kotlin.reflect;
     requires org.mariadb.jdbc;
     requires org.slf4j;
+    requires exposed.java.time;
 
     opens com.parinherm.natterfx to javafx.fxml;
     exports com.parinherm.natterfx;

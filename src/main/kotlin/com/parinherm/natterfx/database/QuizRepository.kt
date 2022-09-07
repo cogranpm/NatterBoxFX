@@ -10,6 +10,7 @@ object QuizRepository {
         val all = QuizEntity.all()
         all.forEach{
             println(it.name)
+            println(it.id.toString())
         }
     }
 }
