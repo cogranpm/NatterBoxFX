@@ -82,6 +82,10 @@ class AudioRecognizer() {
 
                         out.write(b, 0, numBytesRead)
 
+                        //keep an array of ByteArrays for partials
+                        //on a result, copy and send the array to the client
+                        //purge data in local array
+
                         if (recognizer.acceptWaveForm(b, numBytesRead)) {
                             accepted = true
                             //emit(recognizer.result)
