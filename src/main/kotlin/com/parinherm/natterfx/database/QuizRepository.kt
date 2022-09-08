@@ -1,5 +1,6 @@
 package com.parinherm.natterfx.database
 
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.Timestamp
 import java.time.Instant
@@ -31,4 +32,12 @@ object QuizRepository {
            entity.name = name_
         }
     }
+
+    fun load(existing: QuizEntity): QuizEntity {
+        return transaction {
+            val quiz = QuizEntity.findById(existing.id)!!.load(QuizEntity::recognitions, RecognitionEntity::quiz)
+            return@transaction quiz!!
+        }
+    }
+
 }

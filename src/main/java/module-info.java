@@ -24,6 +24,7 @@ module com.parinherm.natterfx {
     requires exposed.java.time;
 
     opens com.parinherm.natterfx to javafx.fxml;
+    opens com.parinherm.natterfx.database to kotlin.reflect;
     exports com.parinherm.natterfx;
     exports com.parinherm.natterfx.database;
 }

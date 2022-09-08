@@ -24,6 +24,8 @@ class MainApplication() : Application() {
         stage.title = "Natter"
         stage.scene = scene
         stage.setOnHidden { controller.shutdown() }
+        stage.minHeight = 480.0
+        stage.minWidth = 640.0
         stage.show()
     }
 

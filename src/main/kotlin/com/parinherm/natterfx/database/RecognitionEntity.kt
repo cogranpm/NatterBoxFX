@@ -14,6 +14,7 @@ import java.util.*
 
 object RecognitionEntities : UUIDTable(){
     val text = text("text")
+    val tag = varchar("tag", 25)
     //val audio: Column<ByteArray> =  binary("audio", Int.MAX_VALUE)
     val audio =  blob("audio")
     val length = integer("length")
@@ -24,6 +25,7 @@ object RecognitionEntities : UUIDTable(){
 class RecognitionEntity (id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<RecognitionEntity>(RecognitionEntities)
     var text by RecognitionEntities.text
+    var tag by RecognitionEntities.tag
     var audio by RecognitionEntities.audio
     var length by RecognitionEntities.length
     var ts by RecognitionEntities.ts

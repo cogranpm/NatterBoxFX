@@ -1,7 +1,6 @@
 package com.parinherm.natterfx
 
-import com.parinherm.natterfx.database.DatabaseSession
-import com.parinherm.natterfx.database.RecognitionRepository
+import com.parinherm.natterfx.database.*
 import javafx.application.Platform
 import javafx.collections.FXCollections
 //import javafx.collections.ListChangeListener
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.javafx.JavaFx
+import org.jetbrains.exposed.dao.load
 import java.io.ByteArrayOutputStream
 import kotlin.coroutines.CoroutineContext
 
@@ -28,11 +28,10 @@ object RecognizerScope : CoroutineScope {
 }
 
 class MainController {
-    //val recognitionList: ObservableList<RecognitionResult>
-    val recognitionList: ObservableList<String>
     var job: Job
     val recognizer = AudioRecognizer()
     //val allAudio: ArrayList<Pair<ByteArray, Int>> = arrayListOf()
+    val recognitionList: ObservableList<String>
 
     init {
         recognitionList = FXCollections.observableArrayList()
@@ -42,7 +41,9 @@ class MainController {
             try {
                 val (audioData, audioLength) = value.getAudioData()
                 QuizCommands.processInput(value, audioData, audioLength)
-                addItem(value)
+                if(value.getCleanedText().isNotEmpty()){
+                    addItem(value)
+                }
                 //allAudio.addAll(value.audioData)
             } catch (e: Exception) {
                 println(e.message)
@@ -82,6 +83,24 @@ class MainController {
     private fun onHelloButtonClick() {
         runBlocking { job.cancelAndJoin() }
 
+       if(QuizCommands.entityList.isNotEmpty()){
+           val lastQuiz = QuizCommands.entityList.last()
+           println(lastQuiz.id)
+           val existingQuiz = QuizRepository.load(lastQuiz)
+           println(existingQuiz.id)
+           println(existingQuiz.recognitions.count())
+           /*
+           val existingQuiz = QuizRepository.load(lastQuiz)
+           existingQuiz.recognitions.forEach{
+              println(it.tag)
+           }
+            */
+       }
+       /*
+        RecognitionRepository.getAll().forEach{
+            AudioPlayer.play(it.audio.bytes, it.length)
+        }
+        */
         welcomeText.text = "Playing Audio"
 
         /*
@@ -94,9 +113,6 @@ class MainController {
         AudioPlayer.play(audioData, output.size())
          */
 
-        RecognitionRepository.getAll().forEach{
-            AudioPlayer.play(it.audio.bytes, it.length)
-        }
 
         /*
        if(recognitionList.isNotEmpty()){

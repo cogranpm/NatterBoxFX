@@ -1,5 +1,9 @@
 package com.parinherm.natterfx
 
+import com.parinherm.natterfx.Constants.STOP_PHRASE
+import com.parinherm.natterfx.Constants.TAG_ANSWER
+import com.parinherm.natterfx.Constants.TAG_NAME
+import com.parinherm.natterfx.Constants.TAG_QUESTION
 import com.parinherm.natterfx.database.QuizEntity
 import com.parinherm.natterfx.database.QuizRepository
 import com.parinherm.natterfx.database.RecognitionRepository
@@ -8,6 +12,9 @@ object QuizCommands {
 
     var currentQuiz: QuizEntity? = null
     var nameFilled: Boolean = false
+    var questionFilled: Boolean = false
+    var answerFilled: Boolean = false
+    val entityList = arrayListOf<QuizEntity>()
 
     fun processInput(input: RecognitionResult, audioData: ByteArray, audioLength: Int) {
         val cleanedText = input.getCleanedText()
@@ -17,15 +24,30 @@ object QuizCommands {
         if (cleanedText.startsWith("create", true)) {
             currentQuiz = QuizRepository.create("untitled")
             nameFilled = false
+            questionFilled = false
+
         } else {
             if (currentQuiz != null) {
+                if(cleanedText.startsWith(STOP_PHRASE)){
+                    println("we stopped")
+                    entityList.add(currentQuiz!!)
+                    currentQuiz = null
+                    return
+                }
+                var tag = TAG_NAME
                 if (!nameFilled) {
                     QuizRepository.setName(input.text, currentQuiz!!)
-                    RecognitionRepository.create(input.text, audioData, audioLength, currentQuiz!!)
                     nameFilled = true
+                } else if (!questionFilled) {
+                    tag = TAG_QUESTION
+                    questionFilled = true
+                    answerFilled = false
                 } else {
-                    RecognitionRepository.create(input.text, audioData, audioLength, currentQuiz!!)
+                    tag = TAG_ANSWER
+                    answerFilled = true
+                    questionFilled = false
                 }
+                RecognitionRepository.create(input.text, tag, audioData, audioLength, currentQuiz!!)
             }
         }
     }
