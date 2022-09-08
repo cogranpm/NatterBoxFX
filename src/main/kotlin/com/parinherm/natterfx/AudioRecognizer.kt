@@ -87,7 +87,18 @@ class AudioRecognizer() {
                             //emit(recognizer.result)
                         } else {
                             //System.out.println(recognizer.partialResult)
-                        }
+                            var text = ""
+                            try{
+                                val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.partialResult)
+                                text = data.text
+                            } catch (e: Exception) {
+                                text = ""
+                            }
+                            //if(text.isNotEmpty()){
+                                val result = RecognitionResult(text, b.copyOf(), numBytesRead)
+                                emit(result)
+                            //}
+                       }
                         if (accepted) {
                             val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
                             val result = RecognitionResult(data.text, b.copyOf(), numBytesRead)

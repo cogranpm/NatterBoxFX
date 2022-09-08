@@ -79,12 +79,17 @@ class MainController {
 
     @FXML
     private fun onHelloButtonClick() {
+       runBlocking { job.cancelAndJoin() }
+
         welcomeText.text = "Playing Audio"
 
+        Platform.runLater{
             allAudio.forEach{
                 println("Playing: ${it.text} ${it.audioLength}")
                 AudioPlayer.play(it.audioData, it.audioLength)
             }
+        }
+
 
 
         /*
