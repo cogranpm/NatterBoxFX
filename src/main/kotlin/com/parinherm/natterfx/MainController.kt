@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.javafx.JavaFx
+import java.io.ByteArrayOutputStream
 import kotlin.coroutines.CoroutineContext
 
 
@@ -31,7 +32,7 @@ class MainController {
     val recognitionList: ObservableList<String>
     var job: Job
     val recognizer = AudioRecognizer()
-    val allAudio: ArrayList<RecognitionResult> = arrayListOf<RecognitionResult>()
+    //val allAudio: ArrayList<Pair<ByteArray, Int>> = arrayListOf()
 
     init {
         recognitionList = FXCollections.observableArrayList()
@@ -39,10 +40,10 @@ class MainController {
 
         job = recognizer.run().cancellable().onEach { value: RecognitionResult ->
             try {
-                QuizCommands.processInput(value)
+                val (audioData, audioLength) = value.getAudioData()
+                QuizCommands.processInput(value, audioData, audioLength)
                 addItem(value)
-                allAudio.add(value)
-                //AudioPlayer.play(value.audioData, value.audioLength)
+                //allAudio.addAll(value.audioData)
             } catch (e: Exception) {
                 println(e.message)
             }
@@ -61,13 +62,13 @@ class MainController {
     fun shutdown() {
 
         UI.launch {
-           job.cancelAndJoin()
+            job.cancelAndJoin()
         }
 
     }
 
     @FXML
-    private fun initialize(){
+    private fun initialize() {
         lstView.items = recognitionList
     }
 
@@ -79,18 +80,23 @@ class MainController {
 
     @FXML
     private fun onHelloButtonClick() {
-       runBlocking { job.cancelAndJoin() }
+        runBlocking { job.cancelAndJoin() }
 
         welcomeText.text = "Playing Audio"
 
-        Platform.runLater{
-            allAudio.forEach{
-                println("Playing: ${it.text} ${it.audioLength}")
-                AudioPlayer.play(it.audioData, it.audioLength)
-            }
+        /*
+        val output = ByteArrayOutputStream()
+        allAudio.forEach {
+            val (audio, length) = it
+            output.write(audio, 0, length)
         }
+        val audioData = output.toByteArray()
+        AudioPlayer.play(audioData, output.size())
+         */
 
-
+        RecognitionRepository.getAll().forEach{
+            AudioPlayer.play(it.audio.bytes, it.length)
+        }
 
         /*
        if(recognitionList.isNotEmpty()){

@@ -9,7 +9,7 @@ object QuizCommands {
     var currentQuiz: QuizEntity? = null
     var nameFilled: Boolean = false
 
-    fun processInput(input: RecognitionResult) {
+    fun processInput(input: RecognitionResult, audioData: ByteArray, audioLength: Int) {
         val cleanedText = input.getCleanedText()
         if (cleanedText.isEmpty()) {
             return
@@ -21,10 +21,10 @@ object QuizCommands {
             if (currentQuiz != null) {
                 if (!nameFilled) {
                     QuizRepository.setName(input.text, currentQuiz!!)
-                    RecognitionRepository.create(input, currentQuiz!!)
+                    RecognitionRepository.create(input.text, audioData, audioLength, currentQuiz!!)
                     nameFilled = true
                 } else {
-                    RecognitionRepository.create(input, currentQuiz!!)
+                    RecognitionRepository.create(input.text, audioData, audioLength, currentQuiz!!)
                 }
             }
         }

@@ -6,12 +6,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object RecognitionRepository {
 
-    fun create(recognitionResult: RecognitionResult, quizEntity_: QuizEntity) {
+    fun create(text_: String, audioData_: ByteArray, audioLength_: Int, quizEntity_: QuizEntity) {
         transaction {
             val recognitionEntity = RecognitionEntity.new {
-                text = recognitionResult.text
-                audio = ExposedBlob(recognitionResult.audioData)
-                length = recognitionResult.audioLength
+                text = text_
+                audio = ExposedBlob(audioData_)
+                length = audioLength_
                 quiz = quizEntity_
             }
         }
@@ -22,6 +22,12 @@ object RecognitionRepository {
             val results = RecognitionEntity.all().limit(1).sortedByDescending { it.ts }
             println(results.size)
             return@transaction results.firstOrNull()
+        }
+    }
+
+    fun getAll(): List<RecognitionEntity> {
+        return transaction {
+            return@transaction RecognitionEntity.all().toList()
         }
     }
 }

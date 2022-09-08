@@ -29,7 +29,7 @@ import javax.sound.sampled.TargetDataLine
 class AudioRecognizer() {
 
 
-    val SPEAKERS_ON = true
+    val SPEAKERS_ON = false
     var microphone: TargetDataLine
 
     /*
@@ -66,53 +66,38 @@ class AudioRecognizer() {
     }
 
     fun run(): Flow<RecognitionResult> = flow {
+        val audioQueue = arrayListOf<Pair<ByteArray, Int>>()
         try {
             Model(modelPath).use { model ->
                 Recognizer(model, 120000f).use { recognizer ->
 
                     var numBytesRead: Int
-                    val out = ByteArrayOutputStream()
+                    //val out = ByteArrayOutputStream()
                     val b = ByteArray(4096)
-                    val copyB = ByteArray(4096)
                     while (true) {
                         var accepted = false
                         val available = microphone.available()
                         numBytesRead = microphone.read(b, 0, CHUNK_SIZE)
                         //numBytesRead = microphone.read(b, 0, available)
-
-                        out.write(b, 0, numBytesRead)
-
-                        //keep an array of ByteArrays for partials
-                        //on a result, copy and send the array to the client
-                        //purge data in local array
-
+                        //out.write(b, 0, numBytesRead)
                         if (recognizer.acceptWaveForm(b, numBytesRead)) {
+                            audioQueue.add(Pair(b.copyOf(), numBytesRead))
                             accepted = true
                             //emit(recognizer.result)
                         } else {
                             //System.out.println(recognizer.partialResult)
-                            var text = ""
-                            try{
-                                val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.partialResult)
-                                text = data.text
-                            } catch (e: Exception) {
-                                text = ""
-                            }
-                            //if(text.isNotEmpty()){
-                                val result = RecognitionResult(text, b.copyOf(), numBytesRead)
-                                emit(result)
-                            //}
-                       }
+                            audioQueue.add(Pair(b.copyOf(), numBytesRead))
+                        }
                         if (accepted) {
                             val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
-                            val result = RecognitionResult(data.text, b.copyOf(), numBytesRead)
+                            val result = RecognitionResult(data.text, audioQueue)
                             emit(result)
+                            audioQueue.clear()
                         }
 
-                        b.copyInto(copyB)
                         if (SPEAKERS_ON) {
-                            //AudioPlayer.play(copyB, numBytesRead)
-                            //AudioPlayer.play(out.toByteArray(), 9000)
+                            AudioPlayer.play(b, numBytesRead)
+                            //AudioPlayer.play(out.toByteArray(), out.size())
                         }
                     }
                 }
