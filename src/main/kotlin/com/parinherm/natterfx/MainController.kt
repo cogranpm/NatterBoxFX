@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.javafx.JavaFx
-import org.jetbrains.exposed.dao.load
-import java.io.ByteArrayOutputStream
 import kotlin.coroutines.CoroutineContext
 
 
@@ -85,22 +83,12 @@ class MainController {
 
        if(QuizCommands.entityList.isNotEmpty()){
            val lastQuiz = QuizCommands.entityList.last()
-           println(lastQuiz.id)
-           val existingQuiz = QuizRepository.load(lastQuiz)
-           println(existingQuiz.id)
-           println(existingQuiz.recognitions.count())
-           /*
-           val existingQuiz = QuizRepository.load(lastQuiz)
-           existingQuiz.recognitions.forEach{
-              println(it.tag)
+           val recognitions = RecognitionRepository.getByQuiz(lastQuiz)
+           recognitions.forEach{
+               println(it.tag)
+               AudioPlayer.play(it.audio.bytes, it.length)
            }
-            */
        }
-       /*
-        RecognitionRepository.getAll().forEach{
-            AudioPlayer.play(it.audio.bytes, it.length)
-        }
-        */
         welcomeText.text = "Playing Audio"
 
         /*

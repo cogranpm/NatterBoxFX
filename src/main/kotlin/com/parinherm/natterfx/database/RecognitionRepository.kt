@@ -1,6 +1,7 @@
 package com.parinherm.natterfx.database
 
 import com.parinherm.natterfx.RecognitionResult
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -33,7 +34,7 @@ object RecognitionRepository {
 
     fun getByQuiz(quizEntity: QuizEntity) : List<RecognitionEntity> {
         return transaction {
-            return@transaction RecognitionEntity.all().toList()
+            return@transaction RecognitionEntity.find(RecognitionEntities.quizId eq quizEntity.id).toList()
         }
     }
 }
