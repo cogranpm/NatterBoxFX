@@ -10,6 +10,7 @@ AudioSystem.write(ais, fileType, wavFile);
 
 package com.parinherm.natterfx
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.decodeFromString
@@ -26,10 +27,13 @@ import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
 import javax.sound.sampled.TargetDataLine
 
+data class RecognizerState(var paused: Boolean = false)
+
 class AudioRecognizer() {
 
 
     val SPEAKERS_ON = false
+    var state: RecognizerState = RecognizerState()
     var microphone: TargetDataLine
 
     /*
@@ -75,29 +79,34 @@ class AudioRecognizer() {
                     //val out = ByteArrayOutputStream()
                     val b = ByteArray(4096)
                     while (true) {
-                        var accepted = false
-                        val available = microphone.available()
-                        numBytesRead = microphone.read(b, 0, CHUNK_SIZE)
-                        //numBytesRead = microphone.read(b, 0, available)
-                        //out.write(b, 0, numBytesRead)
-                        if (recognizer.acceptWaveForm(b, numBytesRead)) {
-                            audioQueue.add(Pair(b.copyOf(), numBytesRead))
-                            accepted = true
-                            //emit(recognizer.result)
-                        } else {
-                            //System.out.println(recognizer.partialResult)
-                            audioQueue.add(Pair(b.copyOf(), numBytesRead))
-                        }
-                        if (accepted) {
-                            val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
-                            val result = RecognitionResult(data.text, audioQueue)
-                            emit(result)
-                            audioQueue.clear()
-                        }
 
-                        if (SPEAKERS_ON) {
-                            AudioPlayer.play(b, numBytesRead)
-                            //AudioPlayer.play(out.toByteArray(), out.size())
+                        if(!state.paused){
+                            var accepted = false
+                            val available = microphone.available()
+                            numBytesRead = microphone.read(b, 0, CHUNK_SIZE)
+                            //numBytesRead = microphone.read(b, 0, available)
+                            //out.write(b, 0, numBytesRead)
+                            if (recognizer.acceptWaveForm(b, numBytesRead)) {
+                                audioQueue.add(Pair(b.copyOf(), numBytesRead))
+                                accepted = true
+                                //emit(recognizer.result)
+                            } else {
+                                //System.out.println(recognizer.partialResult)
+                                audioQueue.add(Pair(b.copyOf(), numBytesRead))
+                            }
+                            if (accepted) {
+                                val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
+                                val result = RecognitionResult(data.text, audioQueue)
+                                emit(result)
+                                audioQueue.clear()
+                            }
+
+                            if (SPEAKERS_ON) {
+                                AudioPlayer.play(b, numBytesRead)
+                                //AudioPlayer.play(out.toByteArray(), out.size())
+                            }
+                        } else {
+                            delay(500)
                         }
                     }
                 }
