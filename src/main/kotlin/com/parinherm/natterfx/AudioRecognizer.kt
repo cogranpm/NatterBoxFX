@@ -86,13 +86,24 @@ class AudioRecognizer() {
                             numBytesRead = microphone.read(b, 0, CHUNK_SIZE)
                             //numBytesRead = microphone.read(b, 0, available)
                             //out.write(b, 0, numBytesRead)
+
+                           // this is how the visualizer would be created
+                            // probably need to emit these also
+                            AudioConverter.calculatePeakAndRms(AudioConverter.encodeToSample(b, numBytesRead))
+
+
                             if (recognizer.acceptWaveForm(b, numBytesRead)) {
                                 audioQueue.add(Pair(b.copyOf(), numBytesRead))
                                 accepted = true
                                 //emit(recognizer.result)
                             } else {
-                                //System.out.println(recognizer.partialResult)
+                                try{
+                                    val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.partialResult)
+                                } catch(e: Exception){
+
+                                }
                                 audioQueue.add(Pair(b.copyOf(), numBytesRead))
+                                //System.out.println(recognizer.partialResult)
                             }
                             if (accepted) {
                                 val data = jsonFormat.decodeFromString<RecognizerText>(recognizer.result)
