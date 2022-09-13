@@ -2,6 +2,7 @@ package com.parinherm.natterfx
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import kotlin.math.abs
 
 object AudioConverter {
 
@@ -17,7 +18,7 @@ object AudioConverter {
         return samples
     }
 
-    fun bytesToShort(buffer: ByteArray): Short {
+    private fun bytesToShort(buffer: ByteArray): Short {
         val bb: ByteBuffer = ByteBuffer.allocate(2)
         bb.order(ByteOrder.BIG_ENDIAN)
         bb.put(buffer[0])
@@ -25,20 +26,18 @@ object AudioConverter {
         return bb.getShort(0)
     }
 
-    fun calculatePeakAndRms(samples: ShortArray) {
+    fun calculatePeakAndRms(samples: ShortArray): Pair<Double, Double> {
         var sumOfSampleSq = 0.0 // sum of square of normalized samples.
         var peakSample = 0.0 // peak sample.
         for (sample in samples) {
             val normSample = sample.toDouble() / 32767 // normalized the sample with maximum value.
             sumOfSampleSq += (normSample * normSample)
             if (Math.abs(sample.toInt()) > peakSample) {
-                peakSample = Math.abs(sample.toInt()).toDouble()
+                peakSample = abs(sample.toInt()).toDouble()
             }
         }
         val rms = 10 * Math.log10(sumOfSampleSq / samples.size)
         val peak = 20 * Math.log10(peakSample / 32767)
-
-        println(rms)
-        println(peak)
+        return Pair<Double, Double>(peak, rms)
     }
 }

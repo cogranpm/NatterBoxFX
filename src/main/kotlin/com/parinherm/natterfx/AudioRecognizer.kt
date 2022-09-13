@@ -89,8 +89,10 @@ class AudioRecognizer() {
 
                            // this is how the visualizer would be created
                             // probably need to emit these also
-                            AudioConverter.calculatePeakAndRms(AudioConverter.encodeToSample(b, numBytesRead))
+                            //AudioConverter.calculatePeakAndRms(AudioConverter.encodeToSample(b, numBytesRead))
 
+                            //emit the audio data  and no text for the visualizer
+                            emit(RecognitionResult(null, arrayListOf(Pair(b.copyOf(), numBytesRead))))
 
                             if (recognizer.acceptWaveForm(b, numBytesRead)) {
                                 audioQueue.add(Pair(b.copyOf(), numBytesRead))

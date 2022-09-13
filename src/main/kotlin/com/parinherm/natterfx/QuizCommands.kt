@@ -16,8 +16,7 @@ object QuizCommands {
     var answerFilled: Boolean = false
     val entityList = arrayListOf<QuizEntity>()
 
-    fun processInput(input: RecognitionResult, audioData: ByteArray, audioLength: Int) {
-        val cleanedText = input.getCleanedText()
+    fun processInput(cleanedText: String, audioData: ByteArray, audioLength: Int) {
         if (cleanedText.isEmpty()) {
             return
         }
@@ -36,7 +35,7 @@ object QuizCommands {
                 }
                 var tag = TAG_NAME
                 if (!nameFilled) {
-                    QuizRepository.setName(input.text, currentQuiz!!)
+                    QuizRepository.setName(cleanedText, currentQuiz!!)
                     nameFilled = true
                 } else if (!questionFilled) {
                     tag = TAG_QUESTION
@@ -47,7 +46,7 @@ object QuizCommands {
                     answerFilled = true
                     questionFilled = false
                 }
-                RecognitionRepository.create(input.text, tag, audioData, audioLength, currentQuiz!!)
+                RecognitionRepository.create(cleanedText, tag, audioData, audioLength, currentQuiz!!)
             }
         }
     }

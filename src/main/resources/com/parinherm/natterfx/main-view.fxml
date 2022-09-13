@@ -9,28 +9,35 @@
 
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.canvas.Canvas?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.parinherm.natterfx.MainController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
-    <Button>Create Quiz</Button>
+
     <HBox>
-        <Label>Record Question</Label>
-        <Button>Test</Button>
+        <Canvas fx:id="spectrum" width="400.0" height="300.0" />
     </HBox>
-    <HBox>
-        <Label>Record Answer</Label>
-        <Button>Test</Button>
-    </HBox>
-    <Button>Next</Button>
-    <Label fx:id="welcomeText"/>
-    <Button onAction="#onHelloButtonClick">
-        <graphic>
-            <FontIcon iconLiteral="mdi2a-apple-finder" iconSize="64"/>
-        </graphic>
-    </Button>
-    <ListView fx:id="lstView">
-    </ListView>
+
+        <Button>Create Quiz</Button>
+        <HBox>
+            <Label>Record Question</Label>
+            <Button>Test</Button>
+        </HBox>
+        <HBox>
+            <Label>Record Answer</Label>
+            <Button>Test</Button>
+        </HBox>
+        <Button>Next</Button>
+        <Label fx:id="welcomeText"/>
+        <Button onAction="#onHelloButtonClick">
+            <graphic>
+                <FontIcon iconLiteral="mdi2a-apple-finder" iconSize="64"/>
+            </graphic>
+        </Button>
+        <ListView fx:id="lstView">
+        </ListView>
+
 
 </VBox>
