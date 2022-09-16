@@ -2,6 +2,31 @@
 
 
 # Design
+Models
+
+Quiz 
+- 1 to many questions
+- 1 to many AudioBite for the title
+- 1 to many QuizRun
+
+AudioBite 
+- text, audio, length combination
+- how to handle the many parents, perhaps a junction table
+
+- Question 
+- 1 to many audio bites
+- 1 to 1 answer
+
+Answer 
+- 1 to many audio bites
+
+QuizRun
+- 1 to many AudioBite for answer 
+
+### Quiz Run Design
+must black out screen, student should not be using eyes, only ears and voice
+whilst completing run
+feedback provided by sound, beeps and voice, such as "confirm answer" etc
 
 
 ## Audio Persistence
